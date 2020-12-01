@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   go: circleci/go@1.5.0
   aws-ecr: circleci/aws-ecr@6.15.0
+  aws-ecs: circleci/aws-ecs@1.4.0
 jobs:
   test:
     executor:
@@ -19,3 +20,9 @@ workflows:
           requires: [test]
           repo: "orbs"
           tag: "${CIRCLE_SHA1}"
+      - aws-ecs/deploy-service-update:
+          requires: [aws-ecr/build-and-push-image]
+          family: "orbs-task-definition"
+          service-name: "orbs-service"
+          cluster-name: "orbs-cluster"
+          container-image-name-updates: "container=orbs,tag=${CIRCLE_SHA1}"
