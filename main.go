@@ -15,7 +15,7 @@ import (
 )
 
 func Hello(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(w, "Hello World!")
+	fmt.Fprint(w, "Hello Orbs!")
 }
 
 func main() {
