@@ -1,23 +1,14 @@
 version: 2.1
 orbs:
-  go: circleci/go@1.5.0
+  go: teka23/golang-test-job@0.0.1
   aws-ecr: circleci/aws-ecr@6.15.0
   aws-ecs: circleci/aws-ecs@1.4.0
-jobs:
-  test:
-    executor:
-      name: go/default
-      tag: '1.15'
-    steps:
-      - checkout
-      - go/mod-download-cached
-      - go/test
 workflows:
   test-build:
     jobs:
-      - test
+      - go/test
       - aws-ecr/build-and-push-image:
-          requires: [test]
+          requires: [go/test]
           repo: "orbs"
           tag: "${CIRCLE_SHA1}"
       - aws-ecs/deploy-service-update:
