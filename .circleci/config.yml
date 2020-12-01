@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   go: circleci/go@1.5.0
+  aws-ecr: circleci/aws-ecr@6.15.0
 jobs:
   test:
     executor:
@@ -11,6 +12,10 @@ jobs:
       - go/mod-download-cached
       - go/test
 workflows:
-  test:
+  test-build:
     jobs:
       - test
+      - aws-ecr/build-and-push-image:
+          requires: [test]
+          repo: "orbs"
+          tag: "${CIRCLE_SHA1}"
